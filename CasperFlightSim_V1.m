@@ -1,6 +1,8 @@
 close all; clc; clear;
 format shortG
 
+%% Proof of Concept that shows that so long as we build a 4 inch rocket (easy) that carries ~8 lbs of liq. fuel (not easy), we should be able to easily achieve 5000 ft
+
 Isp = 250;
 g = 32.2;
 T = 300;
@@ -45,6 +47,5 @@ while (t<tp)
     m = m - mdot*tstep;
     t = t+tstep;
 end
-
 
 disp(h)
