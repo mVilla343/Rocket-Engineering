@@ -1,0 +1,51 @@
+% Older Code for an Orbital Mechanics class, showing the precession of orbits and how they apply to different planets.
+% Written haphazardly and without much care for explanation since it really is just a glorified calculator
+% (Seriously, you can do this same implementation in Desmos)
+% FTWDK, the equation I am referencing is: https://en.wikipedia.org/wiki/Sun-synchronous_orbit#:~:text=The%20angular%20precession, where
+format longG
+T = 7 %defined in hours
+i = 116.3
+apo = 6052 + 900 
+per = 6052 + 400
+
+Ts = T * 60 * 60
+
+%% VENUS
+RV = 6052;
+muVenus = 324859;
+J2Venus = 4.458e-6;
+rhoVenus = (2*3.1415926)/(224.7*86400);
+if apo == 0 && per == 0
+aVenus = ((Ts*sqrt(muVenus))/(2*3.1415926))^(2/3);
+G1Venus = -1.5*sqrt(muVenus)*J2Venus*RV^2*cosd(i)/(rhoVenus*aVenus^3.5);
+eVenus = sqrt(1-sqrt(G1Venus))
+else
+eVenus = (apo-per)/(per+apo)
+aVenus = (per+apo)/2
+iVenus = acosd((-2/3*rhoVenus*(1-eVenus^2)^2*aVenus^3.5)/(sqrt(muVenus)*J2Venus*RV^2))  2
+end
+
+%% EARTH
+RE = 6378;
+muEarth = 42828; 
+J2Earth = 1.08263e-3;
+aEarth =  ((Ts*sqrt(muEarth))/(2*3.1415926))^(2/3);
+rhoEarth = (2*3.1415926)/(365.256363*86400) ;
+G1Earth = -1.5*sqrt(muEarth)*J2Earth*RE^2*cosd(i)/(rhoEarth*aEarth^3.5);
+eEarth = sqrt(1-sqrt(G1Earth))
+
+%% MARS
+
+RM = 3390;
+muMars = 42828;
+J2Mars = 1.9604e-3;
+aMars =  ((Ts*sqrt(muMars))/(2*3.1415926))^(2/3);
+rhoMars = (2*3.1415926)/(1.88*365.256363*86400);
+G1Mars = -1.5*sqrt(muMars)*J2Mars*RM^2*cosd(i)/(rhoMars*aMars^3.5);
+eMars = sqrt(1-sqrt(G1Mars));
+rMarse = aMars*(1+eMars)
+rMarsp = aMars*(1-eMars)
+
+
+%%%%%%%%
+
