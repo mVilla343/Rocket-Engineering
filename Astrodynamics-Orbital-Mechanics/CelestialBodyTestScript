@@ -1,0 +1,45 @@
+clear; clc; close all;
+format ShortG
+% Used with Version 1 of CelestialBody.m
+
+% Constructor from CelestialBody.m
+Earth = CelestialBody([0 0 0],[0 0 0],6e24,6378);
+Moon = CelestialBody([384400 0 0],[0 1.02 0], 7.3e22, 1700);
+
+% Because the Moon is so remote, we remember to make many steps over long periods of time.
+% LEO S\C can use less steps with smaller time steps
+steps = 50000;
+dT = 60;
+
+%Because indexing doesn't work just yet, creating an array of Celestial Body to be referenced when we get to making our trajectories.
+CelestialBodies(1) = Earth;
+CelestialBodies(2) = Moon;
+
+%The actual simulation. Not comment, as it should be very straight forward. Call functions from class methods, save some data, use it in plot.
+for i = 1:steps
+    
+    time(i) = dT*steps;
+    for j = 1:length(CelestialBodies)
+        CelestialBodies(j).UpdateVelocity(CelestialBodies,dT);
+    end
+
+    for j = 1:length(CelestialBodies)
+        CelestialBodies(j).UpdatePosition(dT);
+        positions(j, :, i) = CelestialBodies(j).Position;
+    end
+end
+
+% Just plotting the moon's position will lead to a slight drift, creating a spiral effect.
+% This is because the reference frame is "true" inertial
+% A simple fix is to make the reference frame Earth, by subtracting Earth's position from the calculated
+% moon position. If this was a live sim, we would also do the same for velocity if we wanted to observe its
+% trajectory as viewed from Earth reference. Of course, that is annoying, and without first fixing above issuees,
+% is something that would be better implemented last.
+figure(1)
+title("Trajectory of Moon around")
+subtitle("Composed of " + steps + " points")
+hold on; grid on; axis equal;
+plot(0,0,'o')
+plot(squeeze(positions(2,1,:)) - squeeze(positions(1,1,:)),squeeze(positions(2,2,:)) - squeeze(positions(1,2,:)));
+legend("Earth", "Moon Trajectory")
+
